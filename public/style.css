@@ -1,0 +1,361 @@
+/* ===== RESET GERAL ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", Arial, sans-serif;
+}
+
+/* ===== BASE ===== */
+body {
+  background: linear-gradient(135deg, #1e222a, #2a2f38);
+  color: #f1f1f1;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+/* ===== CONTAINERS GERAIS ===== */
+.container {
+  width: 100%;
+  max-width: 600px;
+  background: #2b2f38;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.login-container {
+  max-width: 400px;
+  background: #2b2f38;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+/* ===== ADMIN (mantém o novo estilo) ===== */
+.admin-container,
+.container-admin {
+  width: 100%;
+  max-width: 1200px;
+  background: #2b2f38;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== TÍTULOS ===== */
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #ffffff;
+  font-size: 1.8em;
+  letter-spacing: 1px;
+}
+
+/* ===== FORMULÁRIOS ===== */
+.form-wrapper {
+  margin-top: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-weight: bold;
+  color: #d3d3d3;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #1f232b;
+  color: #fff;
+  font-size: 15px;
+  transition: all 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  background: #252a33;
+  border: 1px solid #00aaff;
+}
+
+/* ===== BOTÕES GERAIS ===== */
+button,
+.enviar-btn,
+.login-btn,
+.logout-btn,
+.btn-acao {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+/* ===== BOTÕES INDEX ===== */
+.enviar-btn {
+  background: #007bff;
+}
+
+.enviar-btn:hover {
+  background: #005fcc;
+  transform: scale(1.05);
+}
+
+/* ===== BOTÕES LOGIN ===== */
+#login-btn {
+  background-color: #06d6a0;
+}
+
+#login-btn:hover {
+  background: #05c491;
+  transform: scale(1.05);
+}
+
+/* ===== BOTÃO LOGOUT (ADMIN) ===== */
+#logout-btn {
+  background: #ff4040;
+}
+
+#logout-btn:hover {
+  background: #ff1f1f;
+}
+
+/* ===== MENSAGEM ===== */
+#mensagem {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #00c853;
+}
+
+/* ===== ADMIN DASHBOARD ===== */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+  gap: 15px;
+}
+
+.dashboard .card {
+  background: #2a2f38;
+  border-radius: 10px;
+  flex: 1;
+  min-width: 180px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.dashboard .card:hover {
+  transform: translateY(-3px);
+}
+
+.dashboard h3 {
+  color: #ccc;
+  font-size: 15px;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.dashboard p {
+  font-size: 26px;
+  font-weight: bold;
+  color: #00aaff;
+}
+
+/* ===== GRÁFICOS ===== */
+.graficos {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 30px 0;
+  gap: 20px;
+}
+
+.grafico-card {
+  background: #2b2f3a;
+  border-radius: 10px;
+  padding: 20px;
+  flex: 1;
+  min-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.grafico-card h2 {
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+/* ===== CHAMADOS ABERTOS / PENDENTES ===== */
+.chamados-abertos {
+  margin: 25px 0;
+  background: #1f242c;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.chamados-abertos h2 {
+  color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+#lista-abertos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#lista-abertos li {
+  background: #2b2f3a;
+  border: 1px solid #3b3f49;
+  border-radius: 8px;
+  padding: 15px;
+  transition: background 0.3s;
+}
+
+#lista-abertos li:hover {
+  background: #333845;
+}
+
+.chamado-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chamado-item p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #e2e2e2;
+}
+
+.descricao-texto {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 10px;
+  border-radius: 6px;
+  line-height: 1.5;
+  margin: 4px 0 10px;
+  white-space: pre-wrap;
+  color: #eaeaea;
+}
+
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.andamento {
+  background: #ffb703;
+}
+
+.andamento:hover {
+  background: #f4a200;
+}
+
+.finalizar {
+  background: #06d6a0;
+}
+
+.finalizar:hover {
+  background: #05c491;
+}
+
+/* ===== TABELA DE CHAMADOS FINALIZADOS ===== */
+.tabela-chamados {
+  margin-top: 25px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ddd;
+  margin-top: 10px;
+}
+
+thead {
+  background: #3b4150;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+thead th {
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+}
+
+tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #3b3f49;
+  font-size: 15px;
+}
+
+tbody tr:nth-child(even) {
+  background: #262a33;
+}
+
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .container,
+  .login-container,
+  .admin-container,
+  .container-admin {
+    padding: 20px;
+  }
+
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .grafico-card {
+    min-width: 100%;
+  }
+
+  .acoes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-acao {
+    width: 100%;
+  }
+}

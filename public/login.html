@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Sistema de Chamados</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Login - Sistema de Chamados</h1>
+    </header>
+
+    <div class="form-wrapper">
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <input type="email" id="email" placeholder="exemplo@empresa.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha:</label>
+          <input type="password" id="senha" placeholder="Digite sua senha" required>
+        </div>
+
+        <div class="form-group button-group">
+          <button type="submit" id="login-btn">Entrar</button>
+        </div>
+
+        <p id="mensagem"></p>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const form = document.getElementById("login-form");
+    const mensagem = document.getElementById("mensagem");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, senha);
+        window.location.href = "admin.html";
+      } catch (error) {
+        mensagem.textContent = "Erro de autenticação. Verifique suas credenciais.";
+        mensagem.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>
