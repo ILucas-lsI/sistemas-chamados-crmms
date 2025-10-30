@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { 
+  getFirestore, collection, onSnapshot, doc, updateDoc, serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
@@ -59,6 +61,10 @@ function carregarChamados() {
 
       // 🔹 Pendentes e em andamento
       if (chamado.status !== "Finalizado") {
+        const dataCriacao = chamado.criadoEm?.toDate
+          ? chamado.criadoEm.toDate().toLocaleString("pt-BR")
+          : "—";
+
         const li = document.createElement("li");
         li.innerHTML = `
           <div class="chamado-item">
@@ -69,6 +75,7 @@ function carregarChamados() {
             <p class="descricao-texto">${chamado.descricao || "Sem descrição"}</p>
             <p><strong>Prioridade:</strong> ${chamado.prioridade || "N/A"}</p>
             <p><strong>Status:</strong> ${chamado.status || "Pendente"}</p>
+            <p><strong>Criado em:</strong> ${dataCriacao}</p>
             <div class="acoes">
               <button class="btn-acao andamento" onclick="atualizarStatus('${id}', 'Em andamento')">Em andamento</button>
               <button class="btn-acao finalizar" onclick="atualizarStatus('${id}', 'Finalizado')">Finalizar</button>
@@ -80,6 +87,14 @@ function carregarChamados() {
 
       // 🔹 Finalizados
       if (chamado.status === "Finalizado") {
+        const criadoEm = chamado.criadoEm?.toDate
+          ? chamado.criadoEm.toDate().toLocaleString("pt-BR")
+          : "—";
+
+        const finalizadoEm = chamado.finalizadoEm?.toDate
+          ? chamado.finalizadoEm.toDate().toLocaleString("pt-BR")
+          : "—";
+
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${id}</td>
@@ -88,7 +103,8 @@ function carregarChamados() {
           <td>${chamado.descricao || "Sem descrição"}</td>
           <td>${chamado.prioridade || "N/A"}</td>
           <td>${chamado.status}</td>
-          <td>${chamado.criadoEm?.toDate().toLocaleDateString("pt-BR") || "-"}</td>
+          <td>${criadoEm}</td>
+          <td>${finalizadoEm}</td>
         `;
         chamadosBody.appendChild(row);
       }
@@ -103,10 +119,16 @@ function carregarChamados() {
   });
 }
 
-// ✏️ Atualiza status
+// ✏️ Atualiza status e registra data da finalização
 window.atualizarStatus = async function (id, novoStatus) {
   const chamadoRef = doc(db, "chamados", id);
-  await updateDoc(chamadoRef, { status: novoStatus });
+  const atualizacao = { status: novoStatus };
+
+  if (novoStatus === "Finalizado") {
+    atualizacao.finalizadoEm = serverTimestamp();
+  }
+
+  await updateDoc(chamadoRef, atualizacao);
   alert(`Status atualizado para: ${novoStatus}`);
 };
 
