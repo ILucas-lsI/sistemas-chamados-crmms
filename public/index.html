@@ -3,54 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema de Chamados - TI Interno</title>
+  <title>Login - Sistema de Chamados</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Sistema de Chamados - TI Interno</h1>
-    </header>
+  <div class="container-login">
+    <h1>Login - Sistema de Chamados</h1>
 
     <div class="form-wrapper">
-      <form id="chamado-form">
-        <div class="form-group">
-          <label for="nome">Nome do solicitante:</label>
-          <input type="text" id="nome" placeholder="Seu nome completo" required />
-        </div>
-
+      <form id="login-form">
         <div class="form-group">
           <label for="email">E-mail:</label>
-          <input type="email" id="email" placeholder="exemplo@empresa.com" required />
+          <input type="email" id="email" placeholder="Digite seu e-mail" required />
         </div>
 
         <div class="form-group">
-          <label for="departamento">Departamento:</label>
-          <input type="text" id="departamento" placeholder="Ex: Suporte, RH, Financeiro" required />
-        </div>
-
-        <div class="form-group">
-          <label for="descricao">Descrição do problema:</label>
-          <textarea id="descricao" placeholder="Descreva o problema com detalhes..." required></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="prioridade">Prioridade:</label>
-          <select id="prioridade" required>
-            <option value="">Selecione...</option>
-            <option value="Alta">Alta 🔴</option>
-            <option value="Média">Média 🟡</option>
-            <option value="Baixa">Baixa 🟢</option>
-          </select>
+          <label for="senha">Senha:</label>
+          <input type="password" id="senha" placeholder="Digite sua senha" required />
         </div>
 
         <div class="form-group button-group">
-          <button type="submit" class="enviar-btn">Enviar Chamado</button>
+          <button type="submit" class="enviar-btn">Entrar</button>
         </div>
+
         <p id="mensagem"></p>
       </form>
     </div>
   </div>
-<script type="module" src="index.js"></script>
+
+  <script type="module" src="index.js"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@ onAuthStateChanged(auth, (user) => {
 
 // 🚪 Logout
 logoutBtn.addEventListener("click", () => {
-  signOut(auth).then(() => (window.location.href = "login.html"));
+  signOut(auth).then(() => (window.location.href = "index.html"));
 });
 
 // 📋 Carregar chamados
@@ -65,6 +65,7 @@ function carregarChamados() {
           ? chamado.criadoEm.toDate().toLocaleString("pt-BR")
           : "—";
 
+          //${chamado.imagemURL ? `<p><img src="${chamado.imagemURL}" alt="Anexo" class="preview-imagem"></p>` : ""}
         const li = document.createElement("li");
         li.innerHTML = `
           <div class="chamado-item">
@@ -74,6 +75,7 @@ function carregarChamados() {
             <p><strong>Descrição do Problema:</strong></p>
             <p class="descricao-texto">${chamado.descricao || "Sem descrição"}</p>
             <p><strong>Prioridade:</strong> ${chamado.prioridade || "N/A"}</p>
+            
             <p><strong>Status:</strong> ${chamado.status || "Pendente"}</p>
             <p><strong>Criado em:</strong> ${dataCriacao}</p>
             <div class="acoes">
@@ -87,11 +89,12 @@ function carregarChamados() {
 
       // 🔹 Finalizados
       if (chamado.status === "Finalizado") {
-        const criadoEm = chamado.criadoEm?.toDate
+
+          const criadoEm = chamado.criadoEm?.toDate
           ? chamado.criadoEm.toDate().toLocaleString("pt-BR")
           : "—";
 
-        const finalizadoEm = chamado.finalizadoEm?.toDate
+        const dataFinalizacao = chamado.finalizadoEm?.toDate
           ? chamado.finalizadoEm.toDate().toLocaleString("pt-BR")
           : "—";
 
@@ -104,7 +107,8 @@ function carregarChamados() {
           <td>${chamado.prioridade || "N/A"}</td>
           <td>${chamado.status}</td>
           <td>${criadoEm}</td>
-          <td>${finalizadoEm}</td>
+          <td>${dataFinalizacao}</td>
+          <td>${chamado.motivoFinalizacao || "—"}</td>
         `;
         chamadosBody.appendChild(row);
       }
@@ -119,18 +123,28 @@ function carregarChamados() {
   });
 }
 
-// ✏️ Atualiza status e registra data da finalização
+// ✏️ Atualiza status (com mensagem de finalização)
 window.atualizarStatus = async function (id, novoStatus) {
   const chamadoRef = doc(db, "chamados", id);
+
   const atualizacao = { status: novoStatus };
 
+  // Se o chamado for finalizado, solicita o motivo e registra a data
   if (novoStatus === "Finalizado") {
+    const motivo = prompt("Digite uma breve descrição do que foi feito para resolver o chamado:");
+    if (!motivo || motivo.trim() === "") {
+      alert("A finalização foi cancelada — o motivo é obrigatório.");
+      return;
+    }
+
+    atualizacao.motivoFinalizacao = motivo.trim();
     atualizacao.finalizadoEm = serverTimestamp();
   }
 
   await updateDoc(chamadoRef, atualizacao);
   alert(`Status atualizado para: ${novoStatus}`);
 };
+
 
 // 📊 Gráficos
 function atualizarGraficos({ abertos, andamento, finalizados, ultimos7, ultimos30 }) {

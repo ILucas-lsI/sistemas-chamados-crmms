@@ -17,34 +17,34 @@ body {
   padding: 40px 20px;
 }
 
-/* ===== CONTAINERS GERAIS ===== */
-.container {
-  width: 100%;
-  max-width: 600px;
+header{
+  padding-bottom: 15px;
+}
+
+/* ===== CONTAINERS ===== */
+.container,
+.form-container,
+.admin-container,
+.login-container {
+  width: 50%;
   background: #2b2f38;
   border-radius: 10px;
   padding: 30px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
+/* login e formulário com tamanhos diferentes */
 .login-container {
   max-width: 400px;
-  background: #2b2f38;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
 
-/* ===== ADMIN (mantém o novo estilo) ===== */
-.admin-container,
-.container-admin {
-  width: 100%;
+.form-container {
+  max-width: 600px;
+}
+
+.admin-container {
   max-width: 1200px;
-  background: #2b2f38;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 /* ===== TÍTULOS ===== */
@@ -56,24 +56,29 @@ h1 {
   letter-spacing: 1px;
 }
 
+h2 {
+  color: #ffffff;
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
 /* ===== FORMULÁRIOS ===== */
-.form-wrapper {
-  margin-top: 10px;
-}
-
-.form-group {
-  padding: 1vh;
-}
-
 form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 label {
   font-weight: bold;
   color: #d3d3d3;
+  padding: 5px;
 }
 
 input,
@@ -102,6 +107,7 @@ button,
 .enviar-btn,
 .login-btn,
 .logout-btn,
+.btn-logout,
 .btn-acao {
   border: none;
   border-radius: 6px;
@@ -113,7 +119,18 @@ button,
   transition: all 0.3s;
 }
 
-/* ===== BOTÕES INDEX ===== */
+/* ===== BOTÕES LOGIN ===== */
+.login-btn {
+  background-color: #06d6a0;
+  width: 100%;
+}
+
+.login-btn:hover {
+  background: #05c491;
+  transform: scale(1.05);
+}
+
+/* ===== BOTÕES FORMULÁRIO ===== */
 .enviar-btn {
   background: #007bff;
 }
@@ -123,17 +140,80 @@ button,
   transform: scale(1.05);
 }
 
-/* ===== BOTÕES LOGIN ===== */
-#login-btn {
-  background-color: #06d6a0;
+input[type="file"] {
+  background: #1f232b;
+  color: #ccc;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  font-size: 14px;
 }
 
-#login-btn:hover {
-  background: #05c491;
+input[type="file"]::-webkit-file-upload-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+  background: #005fcc;
+}
+
+.link-imagem {
+  display: inline-block;
+  margin-top: 10px;
+  color: #00c853;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link-imagem:hover {
+  text-decoration: underline;
+  color: #05e06d;
+}
+
+
+.btn-copiar {
+  margin-left: 10px;
+  padding: 6px 12px;
+  font-size: 13px;
+  background-color: #0d47a1; /* Azul mais escuro para contraste */
+  color: #f1f1f1; /* Texto mais claro */
+  border: 1px solid #2196f3; /* Borda sutil azul */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.btn-copiar:hover {
+  background-color: #1565c0;
+  color: #ffffff;
   transform: scale(1.05);
 }
 
-/* ===== BOTÃO LOGOUT (ADMIN) ===== */
+.btn-copiar.copiado {
+  background-color: #00c853 !important; /* Verde vivo */
+  color: #fff;
+  border-color: #00e676;
+}
+
+
+/* ===== BOTÕES USER =====*/
+
+#logoutbtn {
+  background: #ff4040;
+}
+
+#logoutbtn:hover {
+  background: #ff1f1f;
+}
+
+/* ===== BOTÕES ADMIN ===== */
 #logout-btn {
   background: #ff4040;
 }
@@ -142,15 +222,62 @@ button,
   background: #ff1f1f;
 }
 
-/* ===== MENSAGEM ===== */
+.btn-acao.andamento {
+  background: #ffb703;
+}
+
+.btn-acao.andamento:hover {
+  background: #f4a200;
+}
+
+.btn-acao.finalizar {
+  background: #06d6a0;
+}
+
+.btn-acao.finalizar:hover {
+  background: #05c491;
+}
+
+.preview-imagem {
+  max-width: 200px;
+  border-radius: 8px;
+  margin-top: 8px;
+  border: 1px solid #3b3f49;
+}
+
+
+/* ===== MENSAGEM DE STATUS ===== */
 #mensagem {
   text-align: center;
   font-weight: bold;
-  margin-top: 10px;
-  color: #00c853;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  display: none;
 }
 
-/* ===== ADMIN DASHBOARD ===== */
+#mensagem.sucesso {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+  display: block;
+}
+
+#mensagem.erro {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef5350;
+  display: block;
+}
+
+#mensagem.alerta {
+  background-color: #fff8e1;
+  color: #f57f17;
+  border: 1px solid #ffca28;
+  display: block;
+}
+
+/* ===== DASHBOARD (ADMIN) ===== */
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -185,7 +312,6 @@ button,
   color: #ccc;
   font-size: 15px;
   margin-bottom: 8px;
-  letter-spacing: 0.5px;
 }
 
 .dashboard p {
@@ -197,7 +323,7 @@ button,
 /* ===== GRÁFICOS ===== */
 .graficos {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   margin: 30px 0;
   gap: 20px;
@@ -208,9 +334,12 @@ button,
   border-radius: 10px;
   padding: 20px;
   flex: 1;
-  min-width: 300px;
+  max-width: 40%; /* 🔹 limite de largura */
+  max-height: 40%; /* 🔹 limite de altura */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .grafico-card h2 {
@@ -219,7 +348,7 @@ button,
   font-size: 18px;
 }
 
-/* ===== CHAMADOS ABERTOS / PENDENTES ===== */
+/* ===== CHAMADOS ABERTOS ===== */
 .chamados-abertos {
   margin: 25px 0;
   background: #1f242c;
@@ -227,22 +356,15 @@ button,
   border-radius: 10px;
 }
 
-.chamados-abertos h2 {
-  color: #fff;
-  margin-bottom: 15px;
-  font-size: 1.3em;
-}
-
 #lista-abertos {
   list-style: none;
   padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-#lista-abertos li {
+.chamado-item {
   background: #2b2f3a;
   border: 1px solid #3b3f49;
   border-radius: 8px;
@@ -250,32 +372,24 @@ button,
   transition: background 0.3s;
 }
 
-#lista-abertos li:hover {
+.chamado-item:hover {
   background: #333845;
 }
 
-.chamado-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .chamado-item p {
-  margin: 2px 0;
   font-size: 14px;
   color: #e2e2e2;
+  margin: 3px 0;
 }
 
 .descricao-texto {
   background: rgba(255, 255, 255, 0.05);
   padding: 8px 10px;
   border-radius: 6px;
-  line-height: 1.5;
-  margin: 4px 0 10px;
-  white-space: pre-wrap;
-  color: #eaeaea;
+  margin: 6px 0 10px;
 }
 
+/* ===== AÇÕES ===== */
 .acoes {
   display: flex;
   justify-content: flex-end;
@@ -283,23 +397,7 @@ button,
   margin-top: 10px;
 }
 
-.andamento {
-  background: #ffb703;
-}
-
-.andamento:hover {
-  background: #f4a200;
-}
-
-.finalizar {
-  background: #06d6a0;
-}
-
-.finalizar:hover {
-  background: #05c491;
-}
-
-/* ===== TABELA DE CHAMADOS FINALIZADOS ===== */
+/* ===== TABELA FINALIZADOS ===== */
 .tabela-chamados {
   margin-top: 25px;
 }
@@ -313,8 +411,6 @@ table {
 
 thead {
   background: #3b4150;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 thead th {
@@ -341,8 +437,8 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .container,
   .login-container,
-  .admin-container,
-  .container-admin {
+  .form-container,
+  .admin-container {
     padding: 20px;
   }
 
@@ -362,61 +458,53 @@ tbody tr:hover {
   .btn-acao {
     width: 100%;
   }
+
+/*===== CHAMADOS DO USUÁRIO =====*/
+}
+.meus-chamados {
+  margin-top: 40px;
+  background: #1f242c;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-/* Mensagem de status (sucesso, erro, alerta) */
-#mensagem {
-  margin-top: 20px;
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.4s ease-in-out, transform 0.4s ease;
-}
-
-#mensagem.sucesso {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #81c784;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#mensagem.erro {
-  background-color: #ffebee;
-  color: #c62828;
-  border: 1px solid #ef5350;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#mensagem.alerta {
-  background-color: #fff8e1;
-  color: #f57f17;
-  border: 1px solid #ffca28;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.btn-copiar {
-  margin-left: 10px;
-  padding: 6px 12px;
-  font-size: 13px;
-  background-color: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-copiar:hover {
-  background-color: #1565c0;
-}
-
-.btn-copiar.copiado {
-  background-color: #2e7d32 !important;
+.meus-chamados h2 {
   color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+#lista-meus-chamados {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chamado-item-usuario {
+  background: #2b2f3a;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #3b3f49;
+}
+
+.chamado-item-usuario p {
+  font-size: 14px;
+  color: #e2e2e2;
+}
+
+.status-pendente {
+  color: #ff5252;
+  font-weight: bold;
+}
+
+.status-em\ andamento {
+  color: #ffb300;
+  font-weight: bold;
+}
+
+.status-finalizado {
+  color: #00c853;
+  font-weight: bold;
 }

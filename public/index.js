@@ -1,72 +1,37 @@
-import { db } from "./firebase-config.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { firebaseConfig } from "./firebase-config.js";
 
-const form = document.getElementById("chamado-form");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const form = document.getElementById("login-form");
 const mensagem = document.getElementById("mensagem");
+
+// Lista de e-mails administrativos (restrita)
+const adminEmails = ["suporte@crmms.org.br"];
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  const nomeUsuario = document.getElementById("nome").value.trim();
   const email = document.getElementById("email").value.trim();
-  const departamento = document.getElementById("departamento").value.trim();
-  const descricao = document.getElementById("descricao").value.trim();
-  const prioridade = document.getElementById("prioridade").value;
-
-  mensagem.className = "";
-  mensagem.style.opacity = "0";
-
-  if (!nomeUsuario || !email || !departamento || !descricao || !prioridade) {
-    mensagem.textContent = "⚠️ Por favor, preencha todos os campos obrigatórios.";
-    mensagem.classList.add("alerta");
-    return;
-  }
+  const senha = document.getElementById("senha").value.trim();
 
   try {
-    const docRef = await addDoc(collection(db, "chamados"), {
-      nomeUsuario,
-      email,
-      departamento,
-      descricao,
-      prioridade,
-      status: "Pendente",
-      criadoEm: serverTimestamp()
-    });
-
-    mensagem.innerHTML = `
-      ✅ Chamado enviado com sucesso!<br>
-      <strong>ID do chamado:</strong> <span id="chamado-id">${docRef.id}</span>
-      <button id="copiar-id" class="btn-copiar">Copiar ID</button>
-    `;
-    mensagem.classList.add("sucesso");
-
-    form.reset();
-
-    // Botão de copiar ID
-    const copiarBtn = document.getElementById("copiar-id");
-    copiarBtn.addEventListener("click", async () => {
-      const idTexto = document.getElementById("chamado-id").textContent;
-      try {
-        await navigator.clipboard.writeText(idTexto);
-        copiarBtn.textContent = "✅ Copiado!";
-        copiarBtn.classList.add("copiado");
-        setTimeout(() => {
-          copiarBtn.textContent = "Copiar ID";
-          copiarBtn.classList.remove("copiado");
-        }, 2000);
-      } catch (err) {
-        console.error("Erro ao copiar ID:", err);
-        copiarBtn.textContent = "❌ Erro ao copiar";
-      }
-    });
-
-  } catch (error) {
-    console.error("Erro ao enviar chamado:", error);
-    mensagem.textContent = "❌ Erro ao enviar o chamado. Tente novamente.";
-    mensagem.classList.add("erro");
+    await signInWithEmailAndPassword(auth, email, senha);
+    mensagem.textContent = "Login realizado com sucesso!";
+  } catch (erro) {
+    mensagem.textContent = "Erro ao fazer login. Verifique suas credenciais.";
+    console.error("Erro de login:", erro);
   }
+});
 
-  setTimeout(() => {
-    mensagem.style.opacity = "1";
-  }, 100);
+// Redireciona após login bem-sucedido
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    if (adminEmails.includes(user.email)) {
+      window.location.href = "admin.html"; // Admin → painel
+    } else {
+      window.location.href = "form.html"; // Usuário comum → criação de chamados
+    }
+  }
 });
