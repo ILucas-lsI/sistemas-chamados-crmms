@@ -35,10 +35,10 @@ function carregarChamados() {
     listaAbertos.innerHTML = "";
 
     let total = 0, abertos = 0, andamento = 0, finalizados = 0;
-    let ultimos7 = 0, ultimos30 = 0;
+    let anual = 0, ultimos30 = 0;
     const agora = new Date();
-    const seteDiasAtras = new Date(agora);
-    seteDiasAtras.setDate(agora.getDate() - 7);
+    const ano = new Date(agora);
+    ano.setDate(agora.getDate() - 365);
     const trintaDiasAtras = new Date(agora);
     trintaDiasAtras.setDate(agora.getDate() - 30);
 
@@ -55,7 +55,7 @@ function carregarChamados() {
 
       if (chamado.criadoEm?.toDate) {
         const data = chamado.criadoEm.toDate();
-        if (data >= seteDiasAtras) ultimos7++;
+        if (data >= ano) anual++;
         if (data >= trintaDiasAtras) ultimos30++;
       }
 
@@ -119,7 +119,7 @@ function carregarChamados() {
     document.getElementById("andamento").textContent = andamento;
     document.getElementById("finalizados").textContent = finalizados;
 
-    atualizarGraficos({ abertos, andamento, finalizados, ultimos7, ultimos30 });
+    atualizarGraficos({ abertos, andamento, finalizados, anual, ultimos30 });
   });
 }
 
@@ -147,7 +147,7 @@ window.atualizarStatus = async function (id, novoStatus) {
 
 
 // 📊 Gráficos
-function atualizarGraficos({ abertos, andamento, finalizados, ultimos7, ultimos30 }) {
+function atualizarGraficos({ abertos, andamento, finalizados, anual, ultimos30 }) {
   const ctx1 = document.getElementById("graficoStatus").getContext("2d");
   const ctx2 = document.getElementById("graficoRecentes").getContext("2d");
   if (graficoStatus) graficoStatus.destroy();
@@ -165,8 +165,8 @@ function atualizarGraficos({ abertos, andamento, finalizados, ultimos7, ultimos3
   graficoRecentes = new Chart(ctx2, {
     type: "pie",
     data: {
-      labels: ["Últimos 7 dias", "Últimos 30 dias"],
-      datasets: [{ data: [ultimos7, ultimos30], backgroundColor: ["#2979ff", "#64b5f6"] }]
+      labels: ["Últimos 365 dias", "Últimos 30 dias"],
+      datasets: [{ data: [anual, ultimos30], backgroundColor: ["#2979ff", "#64b5f6"] }]
     },
     options: { responsive: true, plugins: { legend: { position: "bottom" } } }
   });

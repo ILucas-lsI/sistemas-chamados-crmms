@@ -6,7 +6,6 @@ import {
   query,
   where,
   onSnapshot,
-  orderBy
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import { firebaseConfig } from "./firebase-config.js";
@@ -20,37 +19,42 @@ const listaChamados = document.getElementById("lista-meus-chamados");
 const logoutBtn = document.getElementById("logoutbtn");
 const form = document.getElementById("chamado-form");
 const mensagem = document.getElementById("mensagem");
+const emailInput = document.getElementById("email");
 
+let emailUsuarioLogado = null;
+
+// 🚪 Logout
 logoutBtn.addEventListener("click", () => {
   signOut(auth).then(() => (window.location.href = "index.html"));
 });
 
-// 🔒 Quando o usuário estiver autenticado, carrega seus chamados
-// 🔒 Quando o usuário estiver autenticado, carrega seus chamados
+// 🔒 Verifica autenticação
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     console.warn("Usuário não autenticado — redirecionando...");
     window.location.href = "index.html";
   } else {
     console.log("Usuário autenticado:", user.email);
+    emailUsuarioLogado = user.email;
+
+    // Preenche automaticamente o campo de e-mail e bloqueia edição
+    if (emailInput) {
+      emailInput.value = emailUsuarioLogado;
+      emailInput.readOnly = true;
+      emailInput.style.backgroundColor = "#2e3440";
+      emailInput.style.cursor = "not-allowed";
+    }
+
     carregarChamadosUsuario(user.email);
   }
 });
 
-// 📋 Função para exibir apenas os chamados do usuário logado
+// 📋 Exibe apenas os chamados do usuário logado
 function carregarChamadosUsuario(emailUsuario) {
-  console.log("Carregando chamados para:", emailUsuario);
-
   const chamadosRef = collection(db, "chamados");
-
-  // ⚙️ Query com verificação de data (sem obrigar 'criadoEm' a existir)
-  const q = query(
-    chamadosRef,
-    where("email", "==", emailUsuario)
-  );
+  const q = query(chamadosRef, where("email", "==", emailUsuario));
 
   onSnapshot(q, (snapshot) => {
-    console.log("Snapshot recebido:", snapshot.size, "chamados encontrados");
     listaChamados.innerHTML = "";
 
     if (snapshot.empty) {
@@ -67,14 +71,17 @@ function carregarChamadosUsuario(emailUsuario) {
 
       const li = document.createElement("li");
       li.classList.add("chamado-item-usuario");
-      //${chamado.imagemURL ? `<a href="${chamado.imagemURL}" target="_blank" class="link-imagem">📷 Ver imagem</a>` : ""}
+
       li.innerHTML = `
         <div>
           <p><strong>ID:</strong> ${id}</p>
           <p><strong>Descrição:</strong> ${chamado.descricao || "Sem descrição"}</p>
-          <p><strong>Status:</strong> <span class="status-${(chamado.status || "Pendente").toLowerCase()}">${chamado.status || "Pendente"}</span></p>
+          <p><strong>Status:</strong> 
+            <span class="status-${(chamado.status || "Pendente").toLowerCase()}">
+              ${chamado.status || "Pendente"}
+            </span>
+          </p>
           <p><strong>Data:</strong> ${dataCriacao}</p>
-          
         </div>
       `;
       listaChamados.appendChild(li);
@@ -85,7 +92,7 @@ function carregarChamadosUsuario(emailUsuario) {
   });
 }
 
-// 📤 Envio de novo chamado (igual ao seu código anterior)
+// 📤 Envia novo chamado
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -101,7 +108,6 @@ form.addEventListener("submit", async (e) => {
   const departamento = document.getElementById("departamento").value.trim();
   const descricao = document.getElementById("descricao").value.trim();
   const prioridade = document.getElementById("prioridade").value;
-  //const imagemFile = document.getElementById("imagem").files[0];
 
   mensagem.className = "";
   mensagem.style.opacity = "0";
@@ -112,36 +118,36 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  try {
-    /*
-    let imagemURL = null;
-    if (imagemFile) {
-      const storageRef = ref(storage, `chamados/${Date.now()}_${imagemFile.name}`);
-      await uploadBytes(storageRef, imagemFile);
-      imagemURL = await getDownloadURL(storageRef);
-    }
-    */
+  // ⚠️ Verifica se o email é o mesmo do login
+  if (emailUsuarioLogado && email !== emailUsuarioLogado) {
+    mensagem.textContent = "❌ O e-mail deve ser o mesmo usado no login.";
+    mensagem.classList.add("erro");
+    mensagem.style.opacity = "1";
+    return;
+  }
 
+  try {
     const docRef = await addDoc(collection(db, "chamados"), {
       nomeUsuario,
       email,
       departamento,
       descricao,
       prioridade,
-      //imagemURL,
       status: "Pendente",
-      criadoEm: serverTimestamp()
+      criadoEm: serverTimestamp(),
     });
 
-    //${imagemURL ? `<br><a href="${imagemURL}" target="_blank" class="link-imagem">📷 Ver imagem enviada</a>` : ""}
     mensagem.innerHTML = `
       ✅ Chamado enviado com sucesso!<br>
       <strong>ID do chamado:</strong> <span id="chamado-id">${docRef.id}</span>
       <button id="copiar-id" class="btn-copiar">📋 Copiar ID 📋</button>
-      
     `;
     mensagem.classList.add("sucesso");
     form.reset();
+
+    // Bloqueia o campo de e-mail novamente após reset
+    emailInput.value = emailUsuarioLogado;
+    emailInput.readOnly = true;
 
     const copiarBtn = document.getElementById("copiar-id");
     copiarBtn.addEventListener("click", async () => {
@@ -154,7 +160,7 @@ form.addEventListener("submit", async (e) => {
           copiarBtn.textContent = "📋 Copiar ID 📋";
           copiarBtn.classList.remove("copiado");
         }, 2000);
-      } catch (err) {
+      } catch {
         copiarBtn.textContent = "❌ Erro ao copiar";
       }
     });
