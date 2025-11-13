@@ -6,11 +6,14 @@ import {
   query,
   where,
   onSnapshot,
+  orderBy,
+  limit,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import { firebaseConfig } from "./firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -34,7 +37,6 @@ onAuthStateChanged(auth, (user) => {
     console.warn("Usuário não autenticado — redirecionando...");
     window.location.href = "index.html";
   } else {
-    console.log("Usuário autenticado:", user.email);
     emailUsuarioLogado = user.email;
 
     // Preenche automaticamente o campo de e-mail e bloqueia edição
@@ -74,6 +76,7 @@ function carregarChamadosUsuario(emailUsuario) {
 
       li.innerHTML = `
         <div>
+          <p><strong>Nº Chamado:</strong> ${chamado.numeroChamado || "—"}</p>
           <p><strong>ID:</strong> ${id}</p>
           <p><strong>Descrição:</strong> ${chamado.descricao || "Sem descrição"}</p>
           <p><strong>Status:</strong> 
@@ -105,7 +108,7 @@ form.addEventListener("submit", async (e) => {
 
   const nomeUsuario = document.getElementById("nome").value.trim();
   const email = document.getElementById("email").value.trim();
-  const departamento = document.getElementById("departamento").value.trim();
+  const departamento = document.getElementById("departamento").value;
   const descricao = document.getElementById("descricao").value.trim();
   const prioridade = document.getElementById("prioridade").value;
 
@@ -127,7 +130,23 @@ form.addEventListener("submit", async (e) => {
   }
 
   try {
-    const docRef = await addDoc(collection(db, "chamados"), {
+    // 🔢 Determina o próximo número de chamado
+    const chamadosRef = collection(db, "chamados");
+    const q = query(chamadosRef, orderBy("numeroIndex", "desc"), limit(1));
+    const snapshot = await getDocs(q);
+
+    let proximoNumeroIndex = 1;
+    if (!snapshot.empty) {
+      const ultimoChamado = snapshot.docs[0].data();
+      proximoNumeroIndex = (ultimoChamado.numeroIndex || 0) + 1;
+    }
+
+    const numeroChamado = `CH-${String(proximoNumeroIndex).padStart(4, "0")}`;
+
+    // 🧾 Cria o novo chamado
+    const docRef = await addDoc(chamadosRef, {
+      numeroChamado,
+      numeroIndex: proximoNumeroIndex,
       nomeUsuario,
       email,
       departamento,
@@ -138,14 +157,12 @@ form.addEventListener("submit", async (e) => {
     });
 
     mensagem.innerHTML = `
-      ✅ Chamado enviado com sucesso!<br>
+      ✅ Chamado <strong>${numeroChamado}</strong> enviado com sucesso!<br>
       <strong>ID do chamado:</strong> <span id="chamado-id">${docRef.id}</span>
       <button id="copiar-id" class="btn-copiar">📋 Copiar ID 📋</button>
     `;
     mensagem.classList.add("sucesso");
     form.reset();
-
-    // Bloqueia o campo de e-mail novamente após reset
     emailInput.value = emailUsuarioLogado;
     emailInput.readOnly = true;
 

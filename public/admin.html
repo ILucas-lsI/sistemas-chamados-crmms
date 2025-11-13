@@ -14,6 +14,8 @@
       <button id="logout-btn" class="btn-logout">Sair</button>
     </header>
 
+    <p id="ultimo-chamado" class="ultimo-chamado">Carregando último chamado...</p>
+
     <!-- DASHBOARD -->
     <section class="dashboard">
       <div class="card"><h3>Total de Chamados</h3><p id="total-chamados">0</p></div>
@@ -31,6 +33,14 @@
       <div class="grafico-card">
         <h2>Chamados Recentes</h2>
         <canvas id="graficoRecentes"></canvas>
+      </div>
+      <div class="grafico-card">
+        <h2>Chamados por Setor (Últimos 30 dias)</h2>
+        <canvas id="graficoSetores30"></canvas>
+      </div>
+      <div class="grafico-card">
+        <h2>Chamados por Setor (Últimos 365 dias)</h2>
+        <canvas id="graficoSetores365"></canvas>
       </div>
     </section>
 

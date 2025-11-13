@@ -3,44 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abrir Chamado - Sistema de TI</title>
+  <title>Abertura de Chamado - Sistema de TI</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Abrir Chamado - TI Interno</h1>
-      <button id="logoutbtn" class="btn-logout">Sair</button>
+      <h1>Abertura de Chamado</h1>
+      <button id="logoutbtn" class="logout-btn">Sair</button>
     </header>
 
     <div class="form-wrapper">
       <form id="chamado-form">
         <div class="form-group">
           <label for="nome">Nome do solicitante:</label>
-          <input type="text" id="nome" required />
+          <input type="text" id="nome" placeholder="Seu nome completo" required />
         </div>
 
         <div class="form-group">
           <label for="email">E-mail:</label>
-          <input type="email" id="email" required />
+          <input type="email" id="email" placeholder="exemplo@empresa.com" required />
         </div>
 
+        <!-- 🔹 Novo campo: seleção de setor -->
         <div class="form-group">
-          <label for="departamento">Departamento:</label>
-          <input type="text" id="departamento" required />
+          <label for="departamento">Setor:</label>
+          <select id="departamento" required>
+            <option value="">Selecione o setor...</option>
+            <option value="Informática">Informática</option>
+            <option value="RH">RH</option>
+            <option value="Fiscalização">Fiscalização</option>
+            <option value="Registro">Registro</option>
+            <option value="Protocolo">Protocolo</option>
+            <option value="Controladoria">Controladoria</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Contabilidade">Contabilidade</option>
+            <option value="Sindicância">Sindicância</option>
+            <option value="Processo">Processo</option>
+            <option value="Processo">Jurídico</option>
+          </select>
         </div>
 
         <div class="form-group">
           <label for="descricao">Descrição do problema:</label>
-          <textarea id="descricao" required></textarea>
+          <textarea id="descricao" placeholder="Descreva o problema..." required></textarea>
         </div>
-
-        <!--
-        <div class="form-group">
-          <label for="imagem">Anexar imagem (opcional):</label>
-          <input type="file" id="imagem" accept="image/*">
-        </div>
-        -->
 
         <div class="form-group">
           <label for="prioridade">Prioridade:</label>
@@ -55,17 +62,20 @@
         <div class="form-group button-group">
           <button type="submit" class="enviar-btn">Enviar Chamado</button>
         </div>
+
+        <p id="mensagem"></p>
       </form>
-      <p id="mensagem"></p>
     </div>
-    <!-- CHAMADOS DO USUÁRIO -->
-    <section id="meus-chamados" class="meus-chamados">
-      <h2>📋 Meus Chamados</h2>
+
+    <!-- 🔹 Lista dos chamados do usuário -->
+    <section class="meus-chamados">
+      <h2>Meus Chamados</h2>
       <ul id="lista-meus-chamados">
         <li>Carregando seus chamados...</li>
       </ul>
     </section>
   </div>
+
   <script type="module" src="form.js"></script>
 </body>
 </html>
